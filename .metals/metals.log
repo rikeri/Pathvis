@@ -1,0 +1,38 @@
+2020.10.21 12:20:00 INFO  started: Metals version 0.9.4 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.10.21 12:20:01 INFO  time: initialize in 0.57s
+2020.10.21 12:20:02 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.10.21 20:12:33 INFO  shutting down Metals
+2020.10.22 19:51:58 INFO  started: Metals version 0.9.4 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.10.22 19:51:59 INFO  time: initialize in 0.44s
+2020.10.22 19:51:59 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.10.22 19:52:03 INFO  shutting down Metals
+2020.11.20 12:30:24 INFO  Started: Metals version 0.9.5 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.11.20 12:30:25 INFO  time: initialize in 0.58s
+2020.11.20 12:30:25 WARN  Build server is not auto-connectable.
+2020.11.20 12:30:25 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.11.20 12:39:00 INFO  shutting down Metals
+2020.11.23 16:47:40 INFO  Started: Metals version 0.9.5 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.11.23 16:47:40 INFO  time: initialize in 0.64s
+2020.11.23 16:47:41 WARN  Build server is not auto-connectable.
+2020.11.23 16:47:41 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.11.23 21:45:03 INFO  shutting down Metals
+2020.11.24 15:42:12 INFO  Started: Metals version 0.9.6 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.11.24 15:42:13 INFO  time: initialize in 0.62s
+2020.11.24 15:42:14 WARN  Build server is not auto-connectable.
+2020.11.24 15:42:14 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.11.24 15:43:40 INFO  shutting down Metals
+2020.12.03 23:18:45 INFO  Started: Metals version 0.9.6 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.12.03 23:18:45 INFO  time: initialize in 0.59s
+2020.12.03 23:18:46 WARN  Build server is not auto-connectable.
+2020.12.03 23:18:46 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.12.03 23:20:39 INFO  shutting down Metals
+2020.12.04 17:36:46 INFO  Started: Metals version 0.9.7 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.12.04 17:36:47 INFO  time: initialize in 0.48s
+2020.12.04 17:36:47 WARN  Build server is not auto-connectable.
+2020.12.04 17:36:47 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.12.08 03:46:32 INFO  shutting down Metals
+2020.12.11 14:30:37 INFO  Started: Metals version 0.9.7 in workspace 'C:\Users\Rikar\Documents\Pathvis' for client vscode.
+2020.12.11 14:30:38 INFO  time: initialize in 0.74s
+2020.12.11 14:30:39 WARN  Build server is not auto-connectable.
+2020.12.11 14:30:39 WARN  no build tool detected in workspace 'C:\Users\Rikar\Documents\Pathvis'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.12.12 02:42:28 INFO  shutting down Metals
