@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RaytracingParticipator : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class RaytracingParticipator : MonoBehaviour
         Lambertian,
         Mirror,
         Refractive,
-        Lamp
+        Lamp,
+        RayBlocker
     };
 
     public MaterialType materialType;
@@ -16,6 +18,8 @@ public class RaytracingParticipator : MonoBehaviour
     public float LampStrength = 5f;
     public Color LampColor = Color.white;
     public float IOR = 1.4f;
+    public UnityEvent onHit;
+    public bool barrier = false; // barriers won't have tooltips or visualizers shown
 
     // Start is called before the first frame update
     void Start()

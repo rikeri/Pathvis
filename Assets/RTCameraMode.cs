@@ -10,6 +10,7 @@ public class RTCameraMode : MonoBehaviour
     // public Interactable interactable;
     public RasterPixels viewport;
     public TextMesh label;
+    public AudioClip buttonSound;
     RenderType[] modes = {
             RenderType.PathTracing,
             RenderType.SimpleRT,
@@ -17,10 +18,10 @@ public class RTCameraMode : MonoBehaviour
             RenderType.UVs
         };
     int modeIdx = 0;
-    int modeCnt = 4;
+    int modeCnt = 3; // UVs mode is skipped - texture coordinates are not explained
 
     void Start() {
-        label.text = $"{viewport.renderMode}";
+        label.text = $"mode:\n{viewport.renderMode}";
     }
 
     public void CycleModes() {
@@ -34,7 +35,8 @@ public class RTCameraMode : MonoBehaviour
         //         break;
         // }
         viewport.SetRenderMode(modes[modeIdx]);
-        label.text = $"{viewport.renderMode}";
+        label.text = $"mode:\n{viewport.renderMode}";
+        AudioSource.PlayClipAtPoint(buttonSound, transform.position, 0.5f);
     }
 
 }

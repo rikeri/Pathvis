@@ -10,6 +10,7 @@ public class RTCameraControls : MonoBehaviour
     public Interactable interactable;
     public RasterPixels viewport;
     public TextMesh label;
+    public AudioClip buttonSound;
     int[,] resolutions = {
             {320, 240},
             {160, 120},
@@ -37,6 +38,7 @@ public class RTCameraControls : MonoBehaviour
         resIdx = (resIdx + 1) % resCnt;
         viewport.ChangeResolution(resolutions[resIdx,0], resolutions[resIdx,1], scales[resIdx], true);
         label.text = $"Resolution:\n{viewport.hPixels} x {viewport.vPixels}";
+        AudioSource.PlayClipAtPoint(buttonSound, transform.position, 0.5f);
     }
 
     // Update is called once per frame

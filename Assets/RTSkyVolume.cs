@@ -13,9 +13,11 @@ public class RTSkyVolume : MonoBehaviour
     void Start()
     {
         if (coll == null)
-      coll = this.GetComponent<BoxCollider>();
+            coll = this.GetComponent<BoxCollider>();
     }
     public bool Contains(Vector3 point) {
+        if (coll == null)
+            coll = this.GetComponent<BoxCollider>();
         return coll.bounds.Contains(point);
     }
         

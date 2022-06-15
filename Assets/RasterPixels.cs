@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Pixel
 {
@@ -32,6 +33,8 @@ public class RasterPixels : MonoBehaviour
   public int hPixels = 32;
   public int vPixels = 24;
   public Transform cameraOrigin;
+  private Vector3 cameraOriginRestPosition; 
+  private Quaternion cameraOriginRestRotation; 
   private Pixel[,] pixels;
   private uint samples = 0;
   private Texture2D resultTex;
@@ -52,13 +55,34 @@ public class RasterPixels : MonoBehaviour
   public TextMesh statsLabel;
   private float startTime;
 
+  private float frameStartTime;
+  public float maxFrameDuration = 1f / 120f;
+  public UnityEvent onModeChange;
+
   // Start is called before the first frame update
   void Start()
   {
     _pixelScale = pixelScale;
     _hPixels = hPixels;
     _vPixels = vPixels;
+    cameraOriginRestPosition = cameraOrigin.localPosition;
+    cameraOriginRestRotation = cameraOrigin.localRotation;
     Restart();
+  }
+
+  public void ResetOrigin()
+  {
+    cameraOrigin.localPosition = cameraOriginRestPosition;
+    cameraOrigin.localRotation = cameraOriginRestRotation;
+    cameraOrigin.hasChanged = true;
+  }
+
+  public Texture2D PrintTexture()
+  {
+    resultTex.Apply(true); // write mipchain
+    Texture2D copyTex = new Texture2D(resultTex.width, resultTex.height, TextureFormat.RGBAFloat, true, true);
+    Graphics.CopyTexture(resultTex, copyTex);
+    return copyTex;
   }
 
   void Restart() {
@@ -98,7 +122,11 @@ public class RasterPixels : MonoBehaviour
   }
 
   public void UpdateStats() {
-    statsLabel.text = $"samples: {samples}\ntime: {FormatSeconds(Time.time - startTime)}";
+    statsLabel.text = StatsString();
+  }
+
+  public string StatsString() {
+    return $"samples: {samples}\ntime: {FormatSeconds(Time.time - startTime)}";
   }
 
   public void ChangeResolution(int horizpix, int verticpix, float pixsize, bool overwrite=false) {
@@ -161,6 +189,7 @@ public void SetRenderMode(RenderType mode) {
   if (renderMode == mode) return;
   renderMode = mode;
   if(isHeld < 1) ChangeResolution(_hPixels, _vPixels, _pixelScale);
+  onModeChange.Invoke();
 }
 
 Color RayColor(Vector3 origin, Vector3 direction, int depth) {
@@ -175,9 +204,19 @@ Color RayColor(Vector3 origin, Vector3 direction, int depth) {
     if (rp == null) {
       return background;
     }
+    if (rp.materialType == RaytracingParticipator.MaterialType.RayBlocker) {
+      return background;
+    }
+    // if we hit a refractive surface, offset the start of the cast a bit
+    Vector3 hitOrigin = hit.point;
+    Vector3 scatterDir = rp.ScatterDirection(origin, hit);
+    if (rp.materialType == RaytracingParticipator.MaterialType.Refractive)
+    {
+      hitOrigin += scatterDir * 0.001f;
+    }
 
     // the recursive rendering function
-    return rp.Emitted(hit) + rp.ScatterColor(hit) * RayColor(hit.point, rp.ScatterDirection(origin, hit), depth-1);
+    return rp.Emitted(hit) + rp.ScatterColor(hit) * RayColor(hitOrigin, scatterDir, depth-1);
 
   } else{
     // Debug.DrawRay(origin, direction, Color.red, 0.5f);
@@ -197,13 +236,23 @@ Color SimpleRayColor(Vector3 origin, Vector3 direction, int depth) {
     if (rp == null) {
       return background;
     }
+    if (rp.materialType == RaytracingParticipator.MaterialType.RayBlocker) {
+      return background;
+    }
     // apply a simple shading
     float factor = Vector3.Dot(hit.normal, new Vector3(0.3f, 1f, 0.8f))/ 3f + 0.5f;
 
     // if this material is reflective or refractive, continue bouncing
     if (rp.materialType == RaytracingParticipator.MaterialType.Mirror || 
         rp.materialType == RaytracingParticipator.MaterialType.Refractive) {
-      return rp.Emitted(hit) + rp.ScatterColor(hit) * factor * SimpleRayColor(hit.point, rp.ScatterDirection(origin, hit), depth-1);
+        // if we hit a refractive surface, offset the start of the cast a bit
+        Vector3 hitOrigin = hit.point;
+        Vector3 scatterDir = rp.ScatterDirection(origin, hit);
+        if (rp.materialType == RaytracingParticipator.MaterialType.Refractive)
+        {
+          hitOrigin += scatterDir * 0.001f;
+        }
+        return rp.Emitted(hit) + rp.ScatterColor(hit) * factor * SimpleRayColor(hitOrigin, scatterDir, depth-1);
     }
 
     return rp.Emitted(hit) + rp.ScatterColor(hit) * factor;
@@ -220,6 +269,9 @@ Color NormalRayColor(Vector3 origin, Vector3 direction) {
     // check for participator
     RaytracingParticipator rp = hit.transform.gameObject.GetComponent<RaytracingParticipator>();
     if (rp == null) {
+      return background;
+    }
+    if (rp.materialType == RaytracingParticipator.MaterialType.RayBlocker) {
       return background;
     }
     Vector3 n = (hit.normal + new Vector3(1f, 1f, 1f))/2f;
@@ -239,6 +291,9 @@ Color UVRayColor(Vector3 origin, Vector3 direction) {
     if (rp == null) {
       return background;
     }
+    if (rp.materialType == RaytracingParticipator.MaterialType.RayBlocker) {
+      return background;
+    }
     return new Color(hit.textureCoord.x, hit.textureCoord.y, 0f, 1f);
 
   } else{
@@ -256,10 +311,12 @@ IEnumerator RayTrace()
     {
         foreach (Pixel px in pixels) px.colores = Color.black;
         samples = 0;
+        startTime = Time.time;
     }
     transform.hasChanged = false;
     samples += 1;
 
+    frameStartTime = Time.realtimeSinceStartup;
     for (int h = 0; h <= vPixels; h++){
       for (int w = 0; w <= hPixels; w++)
         {
@@ -289,7 +346,15 @@ IEnumerator RayTrace()
       }
       resultTex.Apply(false);
       UpdateStats();
-      yield return null; // only trace a horizontal slice of pixels each frame
+      // check how we are doing on the frametime 
+      float currentTime = Time.realtimeSinceStartup;
+      if (currentTime - frameStartTime > maxFrameDuration) {
+        // Debug.Log($"current time above maxframeduration, yielding");
+        yield return null; // only trace a horizontal slice of pixels each frame
+        frameStartTime = Time.realtimeSinceStartup;
+      } else {
+        // Debug.Log($"Continued rendering next slice");
+      }
     }
     // yield return new WaitForSeconds(0.5f);
     isRunning = false;
